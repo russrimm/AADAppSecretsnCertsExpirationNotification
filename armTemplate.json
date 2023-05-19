@@ -82,7 +82,7 @@
                         "Close_HTML_tags": {
                             "inputs": {
                                 "name": "html",
-                                "value": "<tbody></table>"
+                                "value": "</tbody></table>"
                             },
                             "runAfter": {
                                 "Until": [

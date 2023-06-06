@@ -287,7 +287,7 @@
                                 "body": {
                                     "Body": "<p>@{variables('html')}</p>",
                                     "Subject": "List of Secrets and Certificates near expiration",
-                                    "To": "russ@russrimmerman.com" //give the list of emails separated by semi-colon
+                                    "To": "youremail@company.com" //give the list of emails separated by semi-colon
                                 },
                                 "host": {
                                     "connection": {

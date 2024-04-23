@@ -79,6 +79,23 @@
                             },
                             "type": "ApiConnection"
                         },
+                        "Initialize_SendReport": {
+                            "runAfter": {
+                                "Initialize_daysTilExpiration": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "SendReport",
+                                        "type": "boolean",
+                                        "value": false
+                                    }
+                                ]
+                            }
+                        },
                         "Close_HTML_tags": {
                             "inputs": {
                                 "name": "html",
@@ -101,7 +118,7 @@
                                 "uri": "https://login.microsoftonline.com/@{body('Tenant-id')?['value']}/oauth2/v2.0/token"
                             },
                             "runAfter": {
-                                "Initialize_daysTilExpiration": [
+                                "Initialize_SendReport": [
                                     "Succeeded"
                                 ]
                             },
@@ -282,35 +299,53 @@
                             },
                             "type": "ParseJson"
                         },
-                        "Send_the_list_of_applications": {
-                            "inputs": {
-                                "body": {
-                                    "Body": "<p>@{variables('html')}</p>",
-                                    "Subject": "List of Secrets and Certificates near expiration",
-                                    "To": "youremail@company.com" //give the list of emails separated by semi-colon
-                                },
-                                "host": {
-                                    "connection": {
-                                        "name": "@parameters('$connections')['office365']['connectionId']"
-                                    }
-                                },
-                                "method": "post",
-                                "path": "/v2/Mail"
+                        "SendReport": {
+                            "actions": {
+								"Send_the_list_of_applications": {
+									"inputs": {
+										"body": {
+											"Body": "<p>@{variables('html')}</p>",
+											"Subject": "List of Secrets and Certificates near expiration",
+											"To": "youremail@company.com" //give the list of emails separated by semi-colon
+										},
+										"host": {
+											"connection": {
+												"name": "@parameters('$connections')['office365']['connectionId']"
+											}
+										},
+										"method": "post",
+										"path": "/v2/Mail"
+									},
+									"runtimeConfiguration": {
+										"secureData": {
+											"properties": [
+												"inputs",
+												"outputs"
+											]
+										}
+									},
+									"type": "ApiConnection"
+								}
                             },
                             "runAfter": {
                                 "Close_HTML_tags": [
                                     "Succeeded"
                                 ]
                             },
-                            "runtimeConfiguration": {
-                                "secureData": {
-                                    "properties": [
-                                        "inputs",
-                                        "outputs"
-                                    ]
-                                }
+                            "else": {
+                                "actions": {}
                             },
-                            "type": "ApiConnection"
+                            "expression": {
+                                "and": [
+                                    {
+                                        "equals": [
+                                            "@variables('SendReport')",
+                                            true
+                                        ]
+                                    }
+                                ]
+                            },
+                            "type": "If"
                         },
                         "Tenant-id": {
                             "inputs": {
@@ -464,7 +499,7 @@
                                                                 "value": "@outputs('DifferentAsDays')"
                                                             },
                                                             "runAfter": {
-                                                                "DifferentAsDays": [
+                                                                "Enable_SendReport_(PasswordCred)": [
                                                                     "Succeeded"
                                                                 ]
                                                             },
@@ -478,6 +513,18 @@
                                                                 ]
                                                             },
                                                             "type": "Compose"
+                                                        },
+                                                        "Enable_SendReport_(PasswordCred)": {
+                                                            "runAfter": {
+                                                                "DifferentAsDays": [
+                                                                    "Succeeded"
+                                                                ]
+                                                            },
+                                                            "type": "SetVariable",
+                                                            "inputs": {
+                                                                "name": "SendReport",
+                                                                "value": true
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
@@ -617,7 +664,7 @@
                                                                 "uri": "https://graph.microsoft.com/v1.0/applications/@{items('Foreach_-_apps')?['id']}/owners"
                                                             },
                                                             "runAfter": {
-                                                                "Store_Days_till_expiration": [
+                                                                "Enable_SendReport_(KeyCred)": [
                                                                     "Succeeded"
                                                                 ]
                                                             },
@@ -643,6 +690,18 @@
                                                                 ]
                                                             },
                                                             "type": "SetVariable"
+                                                        },
+                                                        "Enable_SendReport_(KeyCred)": {
+                                                            "runAfter": {
+                                                                "Store_Days_till_expiration": [
+                                                                    "Succeeded"
+                                                                ]
+                                                            },
+                                                            "type": "SetVariable",
+                                                            "inputs": {
+                                                                "name": "SendReport",
+                                                                "value": true
+                                                            }
                                                         }
                                                     },
                                                     "expression": {
@@ -922,7 +981,10 @@
                                     },
                                     "runAfter": {
                                         "Foreach_-_apps": [
-                                            "Succeeded"
+                                            "Succeeded",
+                                            "TimedOut",
+                                            "Failed",
+                                            "Skipped"
                                         ]
                                     },
                                     "type": "SetVariable"

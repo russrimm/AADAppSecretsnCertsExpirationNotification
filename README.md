@@ -1,4 +1,4 @@
-# AADAppSecretsnCertsExpirationNotification
+# EntraIDAppSecretsnCertsExpirationNotification
 
 Use Power Automate to proactively notify of upcoming Azure AD / Entra ID application client secrets and certificate expirations 
  

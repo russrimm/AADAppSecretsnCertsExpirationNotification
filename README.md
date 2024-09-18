@@ -1,11 +1,11 @@
 # AADAppSecretsnCertsExpirationNotification
 
-Use Power Automate to proactively notify of upcoming Azure AD application client secrets and certificate expirations 
+Use Power Automate to proactively notify of upcoming Azure AD / Entra ID application client secrets and certificate expirations 
  
 Are you challenged with keeping up with all your Azure Active Directory Enterprise Application client secrets and certificates and their associated expiration dates? 
-I sometimes work with customers who have a thousand or more Azure AD applications to manage. Unfortunately, trying to keep up with all the client secrets and certificates expiring on each one of these apps can be a futile experience.   
+I sometimes work with customers who have a thousand or more Azure AD / Entra ID applications to manage. Unfortunately, trying to keep up with all the client secrets and certificates expiring on each one of these apps can be a futile experience.   
 
-I came up with a solution to this problem by using Power Automate to proactively notify the Azure Active Directory administrators of upcoming client secret and certificate expirations. This solution was a big help for customers with thousands of AAD apps to keep track of.  I owe a huge thanks to a friend and peer of mine, Norman Drews, for his CSS & HTML expertise. 
+I came up with a solution to this problem by using Power Automate to proactively notify the Entra ID administrators of upcoming client secret and certificate expirations. This solution was a big help for customers with thousands of AAD apps to keep track of.  I owe a huge thanks to a friend and peer of mine, Norman Drews, for his CSS & HTML expertise. 
 
 Here’s how I solved it using Power Automate: 
  
